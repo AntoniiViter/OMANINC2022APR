@@ -40,7 +40,7 @@
         </div>
     </div>
     {% if viewnews.datearchived is None %}
-        <form style='display: none;' method="POST" action="{% url 'archivednews' viewnews.id %}">
+        <form style='display: none;' method="POST" action="{% url 'archivenews' viewnews.id %}">
             {% csrf_token %}
             <button id="archive" type="submit"> Archive</button>
         </form>
