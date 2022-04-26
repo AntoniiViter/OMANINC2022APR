@@ -3,7 +3,11 @@
 {% block content %}
     <div class="row justify-content-center mt-5">
         <div class="col-md-5">
+            {% if viewnews.datearchived is None %}
             <h2>New News</h2>
+            {% else %}
+            <h2>New News <span style="color: #a3a728">✓ Archived </span></h2>
+            {% endif %}
         </div>
     </div>
     <div class="row justify-content-center mt-5">
@@ -17,29 +21,39 @@
                 {% csrf_token %}
                 <div class="form-group">
                     <label for="title">Title</label>
-                    <input type="text" name="title" class="form-control" id="title" value="{{ news.title }}" required>
+                    <input type="text" name="title" class="form-control" id="title" value="{{ viewnews.title }}" required>
                 </div>
                 <div class="form-group">
                     <label for="info">info</label>
-                    <textarea name="info" rows="5" class="form-control" id="info" >{{ news.info }}</textarea>
+                    <textarea name="info" rows="5" class="form-control" id="info" >{{ viewnews.info }}</textarea>
                 </div>
-                <div class="form-group form-check">>
-                    <label class="form-check-label" for="important">Important</label>
-                </div>
+                 {% if viewnews.datearchived is None %}
                 <button type="submit" class="btn btn-primary">Save</button>
                 <button type="button" class="btn btn-success" onclick="$('#archive').click()">Archive</button>
                 <button type="button" class="btn btn-danger" onclick="$('#delete').click()">Delete</button>
+                <a href="{% url 'currentnews' %}"><button type="button" class="btn btn-info">Back</button></a>
+                {% else %}
+                <button type="button" class="btn btn-danger" onclick="$('#delete').click()">Delete</button>
+                <a href="{% url 'archivednews' %}"><button type="button" class="btn btn-info">Back</button></a>
+            {% endif %}
             </form>
         </div>
     </div>
-    {% if news.datearchived is None %}
-        <form style='display: none;' method="POST" action="{% url 'archivenews' news.id %}">
+    {% if viewnews.datearchived is None %}
+        <form style='display: none;' method="POST" action="{% url 'archivednews' viewnews.id %}">
             {% csrf_token %}
-            <button id="archive" type="submit">Archive</button>
+            <button id="archive" type="submit"> Archive</button>
         </form>
-    {% endif %}
-    <form style='display: none;' method="POST" action="{% url 'deletenews' news.id %}">
+
+    <form style='display: none;' method="POST" action="{% url 'deletenews' viewnews.id %}">
         {% csrf_token %}
         <button id="delete" type="submit">Delete</button>
+
+        {% else %}
+        <form style='display: none;' method="POST" action="{% url 'deletenews_archives' viewnews.id %}">
+        {% csrf_token %}
+        <button id="delete" type="submit">Delete</button>
+
+    {% endif %}
     </form>
 {% endblock %}
