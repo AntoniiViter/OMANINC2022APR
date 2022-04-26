@@ -1,0 +1,30 @@
+{% extends "news/base.html" %}
+
+{% block content %}
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-10">
+            {% if news %}
+                 <h1>{{ news.count }} Current News{{ news.count|pluralize }}</h1>
+            {% else %}
+                           <h1>Current News</h1>
+            {% endif %}
+        </div>
+    </div>
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-10">
+        {% if news %}
+            <div class="list-group">
+                {% for news in news %}
+                    <a href="{% url 'viewnews' news.id %}" class="list-group-item list-group-item-action{% if news.important %} list-group-item-danger{% endif %}"><b>{{ news.title }}</b>{% if news.info %} - {{ news.info|truncatechars:30 }}{% endif %}</a>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="text-center">
+                <h2>Looks like you don't have any news! Nice work.</h2>
+            <br>
+            <a role="button" class="btn btn-primary" href="{% url 'createnews' %}">New news</a>
+            </div>
+        {% endif %}
+        </div>
+    </div>
+{% endblock %}
